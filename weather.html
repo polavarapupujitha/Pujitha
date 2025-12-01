@@ -1,0 +1,70 @@
+<html>
+<head>
+<title>Weather reporting</title>
+<style>
+body{
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content: center;
+height: 100vh;
+margin:0;
+border: 5px solid purple;  
+  box-sizing: border-box;   
+}
+button{
+width: 70px;
+  height: 30px;
+color:black;
+background-color:pink;
+border-radius:20px;
+}
+#result {
+      margin-top: 20px;
+      padding: 15px;
+      border: 2px solid blue;
+      border-radius: 10px;
+      background-color: lightyellow;
+      text-align: center;
+      min-width: 200px;
+    }
+
+</style>
+</head>
+<body>
+<h1>Weather Reporting</h1>
+<input type="text" id="city" placeholder="enter a city"><br>
+<button id="search">search</button>
+<div id="result"></div>
+<script>
+document.getElementById("search").addEventListener("click", () => {
+  const city = document.getElementById("city").value.trim();
+  const apiKey = "b015e9ca55d7b1c60b4039aa60e57324";
+
+  const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+
+  fetch(url)
+    .then(response => response.json())
+    .then(data => {
+      console.log(data);
+      if (data.cod === 200) {
+        document.getElementById("result").innerHTML = `
+          <h3>${data.name}, ${data.sys.country}</h3>
+          <p>🌡️ Temperature: ${data.main.temp}°C</p>
+          <p>☁️ Weather: ${data.weather[0].description}</p>
+          <p>💨 Wind Speed: ${data.wind.speed} m/s</p>
+        `;
+      } else {
+        document.getElementById("result").innerHTML = `<p>${data.message}</p>`;
+      }
+    })
+    .catch(error => {
+      document.getElementById("result").innerHTML = `<p>Error fetching data</p>`;
+      console.error(error);
+    });
+});
+</script>
+
+</body>
+</html>
+
